@@ -1,5 +1,5 @@
 import { Todo } from "./todoData"
-import { sideBar, displayProjects, displayTodos } from "./todoPage"
+import { sideBar, displayProjects, displayTodos, displayTodo, displayNew } from "./todoPage"
 import { project } from "./projects"
 
 function removeListeners(element) {
@@ -23,6 +23,18 @@ function removeMain(){
     main.remove()
 }
 
+function addSidebarListeners() {
+    const projectBtn = document.querySelector('#project-button')
+    const projectsBtn = document.querySelector('#projects-button')
+
+    projectsBtn.addEventListener("click", (e) => {
+        loadProjects()
+    })
+    projectBtn.addEventListener("click", (e) => {
+        loadTodos(projectBtn.textContent)
+    })
+}
+
 function addProjectListeners(element) {
     const children = element.children
     for (let i = 0; i < children.length; i++) {
@@ -43,7 +55,7 @@ function addTodosListeners(element) {
     }
 }
 
-function loadProjects(projects) {
+function loadProjects() {
     const element = document.querySelector('#main')
     removeListeners(element)
     removeMain()
@@ -59,14 +71,32 @@ function loadTodos(title) {
         const element = document.querySelector('#main')
         removeListeners(element)
         removeMain()
-        const mainC = displayTodos(projects[0].todoIds, todos)
+        const mainC = displayTodos(project.todoIds, todos)
         content.appendChild(mainC)
         addTodosListeners(mainC)
+
+        //update sidebar
+        const projectBtn = document.querySelector('#project-button')
+        projectBtn.textContent = title
+    }
+    else {
+        alert("cant find projects")
     }
 }
 
 function loadTodo(id) {
-    alert(id)
+    const todo = todos.find(t => t.id == id)
+    if (todo){
+        const element = document.querySelector('#main')
+        removeListeners(element)
+        removeMain()
+        const mainC = displayTodo(todo)
+        content.appendChild(mainC)
+        //addTodosListeners(mainC)
+    }
+    else {
+        alert("cant match todo id")
+    }
 }
 
 const content = document.querySelector('#content')
@@ -87,7 +117,8 @@ projects.push(new project("Extra", []))
 projects[3].addTodo(0)
 
 
-const topbar = sideBar()
+const topbar = sideBar(projects[0].name)
 content.appendChild(topbar)
 
-loadProjects(projects)
+addSidebarListeners()
+loadProjects()

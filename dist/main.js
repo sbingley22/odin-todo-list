@@ -69,26 +69,29 @@ class Todo {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   displayNew: () => (/* binding */ displayNew),
 /* harmony export */   displayProjects: () => (/* binding */ displayProjects),
 /* harmony export */   displayTodo: () => (/* binding */ displayTodo),
 /* harmony export */   displayTodos: () => (/* binding */ displayTodos),
 /* harmony export */   sideBar: () => (/* binding */ sideBar)
 /* harmony export */ });
-/* harmony import */ var _projects__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./projects */ "./src/projects.js");
-
-
-const sideBar = () => {
+const sideBar = (currentProject = "Default") => {
     const sidebar = document.createElement("div")
     sidebar.id = 'sidebar'
     
     const h1 = document.createElement('h1')
     h1.textContent = 'Todo List'
 
+    const project = document.createElement('h2')
+    project.textContent = currentProject
+    project.id = 'project-button'
+
     const projects = document.createElement('h2')
     projects.textContent = 'View Projects'
-    projects.id = 'projects'
+    projects.id = 'projects-button'
 
     sidebar.appendChild(h1)
+    sidebar.appendChild(project)
     sidebar.appendChild(projects)
 
     return sidebar
@@ -147,35 +150,61 @@ const displayTodos = (todoIds, todos) => {
     return todoDiv
 }
 
-const displayTodo = (todoId, todos) => {
+const displayTodo = (todo) => {
     const todoDiv = document.createElement('div')
     todoDiv.id = 'main'
-    todoDiv.className = 'todo-container'
-
-    for (let i = 0; i < todos.length; i++) {
-        const todo = todos[i];
+    todoDiv.className = 'todo-singular'
         
-        if (todo.id in todoId) {
-            const div = document.createElement("div")
-            div.className = 'todo-card'
-            const title = document.createElement("h1")
-            title.textContent = todo.title
-            const date = document.createElement("h5")
-            date.textContent = "Date due: " + todo.date
-            const priority = document.createElement("h6")
-            priority.textContent = "Priority: " + todo.priority
-            const p = document.createElement("p")
-            p.textContent = todo.description
-    
-            div.appendChild(title)
-            div.appendChild(date)
-            div.appendChild(priority)
-            div.appendChild(p)
-            todoDiv.appendChild(div)
+    const div = document.createElement("div")
+    div.className = 'todo-card'
+    const title = document.createElement("h1")
+    title.textContent = todo.title
+    const date = document.createElement("h5")
+    date.textContent = "Date due: " + todo.date
+    const priority = document.createElement("h6")
+    priority.textContent = "Priority: " + todo.priority
+    const p = document.createElement("p")
+    p.textContent = todo.description
 
-            break
-        }
-    }
+    if (todo.priority == "high") div.style.borderColor = "red"
+    else if (todo.priority == "mid") div.style.borderColor = "yellow"
+    else div.style.borderColor = "green"
+
+    div.appendChild(title)
+    div.appendChild(date)
+    div.appendChild(priority)
+    div.appendChild(p)
+    todoDiv.appendChild(div)
+
+    return todoDiv
+}
+
+const displayNew = () => {
+    const todoDiv = document.createElement('div')
+    todoDiv.id = 'main'
+    todoDiv.className = 'new-form'
+        
+    const div = document.createElement("div")
+    div.className = 'form-card'
+
+    const form = document.createElement("form");
+    form.id = "myForm";
+
+    const nameLabel = document.createElement("label");
+    nameLabel.innerText = "Title:";
+    const nameInput = document.createElement("input");
+    nameInput.type = "text";
+    nameInput.name = "title";
+
+    const submitButton = document.createElement("input");
+    submitButton.type = "submit";
+    submitButton.value = "Add Todo";
+
+    form.appendChild(nameLabel)
+    form.appendChild(nameInput)
+    form.appendChild(submitButton)
+    div.appendChild(form)
+    todoDiv.appendChild(div)
 
     return todoDiv
 }
@@ -275,6 +304,18 @@ function removeMain(){
     main.remove()
 }
 
+function addSidebarListeners() {
+    const projectBtn = document.querySelector('#project-button')
+    const projectsBtn = document.querySelector('#projects-button')
+
+    projectsBtn.addEventListener("click", (e) => {
+        loadProjects()
+    })
+    projectBtn.addEventListener("click", (e) => {
+        loadTodos(projectBtn.textContent)
+    })
+}
+
 function addProjectListeners(element) {
     const children = element.children
     for (let i = 0; i < children.length; i++) {
@@ -295,7 +336,7 @@ function addTodosListeners(element) {
     }
 }
 
-function loadProjects(projects) {
+function loadProjects() {
     const element = document.querySelector('#main')
     removeListeners(element)
     removeMain()
@@ -311,14 +352,32 @@ function loadTodos(title) {
         const element = document.querySelector('#main')
         removeListeners(element)
         removeMain()
-        const mainC = (0,_todoPage__WEBPACK_IMPORTED_MODULE_1__.displayTodos)(projects[0].todoIds, todos)
+        const mainC = (0,_todoPage__WEBPACK_IMPORTED_MODULE_1__.displayTodos)(project.todoIds, todos)
         content.appendChild(mainC)
         addTodosListeners(mainC)
+
+        //update sidebar
+        const projectBtn = document.querySelector('#project-button')
+        projectBtn.textContent = title
+    }
+    else {
+        alert("cant find projects")
     }
 }
 
 function loadTodo(id) {
-    alert(id)
+    const todo = todos.find(t => t.id == id)
+    if (todo){
+        const element = document.querySelector('#main')
+        removeListeners(element)
+        removeMain()
+        const mainC = (0,_todoPage__WEBPACK_IMPORTED_MODULE_1__.displayTodo)(todo)
+        content.appendChild(mainC)
+        //addTodosListeners(mainC)
+    }
+    else {
+        alert("cant match todo id")
+    }
 }
 
 const content = document.querySelector('#content')
@@ -339,10 +398,11 @@ projects.push(new _projects__WEBPACK_IMPORTED_MODULE_2__.project("Extra", []))
 projects[3].addTodo(0)
 
 
-const topbar = (0,_todoPage__WEBPACK_IMPORTED_MODULE_1__.sideBar)()
+const topbar = (0,_todoPage__WEBPACK_IMPORTED_MODULE_1__.sideBar)(projects[0].name)
 content.appendChild(topbar)
 
-loadProjects(projects)
+addSidebarListeners()
+loadProjects()
 })();
 
 /******/ })()
