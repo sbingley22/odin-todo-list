@@ -1,28 +1,21 @@
 class project {
-    constructor(name, todoIds){
-        this.name = name
-        this.todoIds = todoIds
+    constructor(name, todoIds) {
+        this._name = name;
+       
+        this.todoIds = todoIds;
     }
 
     addTodo(id) {
-        this.todoIds.push(id)
+        this.todoIds.push(id);
     }
 
-    get name(){
-        return this.name
+    get name() {
+        return this._name; // Return the value of the private variable
     }
 
-    set name(name){
-        this.name = name
-    }
-
-    get todoIds(){
-        return this.todoIds
-    }
-
-    set todoIds(todoIds){
-        this.todoIds
+    set name(name) {
+        this._name = name; // Set the private variable with the new value
     }
 }
 
-export {project}
+export { project };

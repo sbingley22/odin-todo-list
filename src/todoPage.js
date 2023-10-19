@@ -18,15 +18,17 @@ const sideBar = () => {
 const displayProjects = (projects) => {
     const projectDiv = document.createElement('div')
     projectDiv.id = 'main'
+    projectDiv.className = 'projects-container'
 
     for (let i = 0; i < projects.length; i++) {
         const name = projects[i].name;
+        const ids = projects[i].todoIds;
         const div = document.createElement("div")
-        div.className = 'projects-container'
+        div.className = 'projects-card'
         const title = document.createElement("h1")
         title.textContent = name
         const p = document.createElement("p")
-        p.textContent = `Number of todos: ${projects.length}`
+        p.textContent = `Number of todos: ${ids.length}`
 
         div.appendChild(title)
         div.appendChild(p)

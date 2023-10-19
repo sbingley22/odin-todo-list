@@ -8,11 +8,20 @@ const todos = []
 const projects = []
 
 todos.push(new Todo(0, "Workout", "Squats", "tomorrow", "high"))
+todos.push(new Todo(1, "Flex", "Abs", "now", "low"))
 projects.push(new project("Default", []))
 projects[0].addTodo(0)
+projects[0].addTodo(1)
+projects.push(new project("Extra", []))
+projects[1].addTodo(0)
+projects.push(new project("Extra", []))
+projects[2].addTodo(0)
+projects.push(new project("Extra", []))
+projects[3].addTodo(0)
 
 
 const topbar = sideBar()
 content.appendChild(topbar)
 
 const mainContent = displayProjects(projects)
+content.appendChild(mainContent)
