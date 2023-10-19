@@ -51,6 +51,7 @@ const displayTodos = (todoIds, todos) => {
         if (todo.id in todoIds) {
             const div = document.createElement("div")
             div.className = 'todo-card'
+            div.setAttribute("data-id", todo.id)
             const title = document.createElement("h1")
             title.textContent = todo.title
             const date = document.createElement("h5")
