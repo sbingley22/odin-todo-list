@@ -82,6 +82,10 @@ const sideBar = (currentProject = "Default") => {
     const h1 = document.createElement('h1')
     h1.textContent = 'Todo List'
 
+    const newTodo = document.createElement('h2')
+    newTodo.textContent = "New"
+    newTodo.id = 'new-button'
+
     const project = document.createElement('h2')
     project.textContent = currentProject
     project.id = 'project-button'
@@ -91,6 +95,7 @@ const sideBar = (currentProject = "Default") => {
     projects.id = 'projects-button'
 
     sidebar.appendChild(h1)
+    sidebar.appendChild(newTodo)
     sidebar.appendChild(project)
     sidebar.appendChild(projects)
 
@@ -188,7 +193,7 @@ const displayNew = () => {
     div.className = 'form-card'
 
     const form = document.createElement("form");
-    form.id = "myForm";
+    form.id = "my-form";
 
     const nameLabel = document.createElement("label");
     nameLabel.innerText = "Title:";
@@ -196,12 +201,54 @@ const displayNew = () => {
     nameInput.type = "text";
     nameInput.name = "title";
 
+    form.appendChild(nameLabel)
+    form.appendChild(nameInput)
+
+    const dateLabel = document.createElement("label")
+    dateLabel.innerText = "Due date:"
+    const dateInput = document.createElement("input")
+    dateInput.type = "date"
+    dateInput.name = "date"
+    form.appendChild(dateLabel)
+    form.appendChild(dateInput)
+
+    const priorityLabel = document.createElement("label")
+    priorityLabel.innerText = "Priority:"
+    form.appendChild(priorityLabel)
+
+    const divR = document.createElement("div")
+    form.appendChild(divR)
+
+    const options = ["low", "mid", "high"]
+    options.forEach((option,index) => {
+        // Create a radio button element
+        const radioButton = document.createElement("input");
+        radioButton.type = "radio";
+        radioButton.name = "fruit"; // Use the same name for all radio buttons to create a group
+        radioButton.value = option;
+    
+        // Create a label element for the radio button
+        const label = document.createElement("label");
+        label.textContent = option;
+
+        // Append the radio button and label to the container
+        divR.appendChild(label);
+        divR.appendChild(radioButton);
+    })
+
+    const textLabel = document.createElement("label");
+    textLabel.innerText = "Description:";
+    const textarea = document.createElement("textarea");
+    textarea.name = "Description";
+    textarea.rows = 4; // Set the number of rows (optional)
+    textarea.cols = 50;
+    form.appendChild(textLabel)
+    form.appendChild(textarea)
+
     const submitButton = document.createElement("input");
     submitButton.type = "submit";
     submitButton.value = "Add Todo";
 
-    form.appendChild(nameLabel)
-    form.appendChild(nameInput)
     form.appendChild(submitButton)
     div.appendChild(form)
     todoDiv.appendChild(div)
@@ -305,9 +352,13 @@ function removeMain(){
 }
 
 function addSidebarListeners() {
+    const newBtn = document.querySelector('#new-button')
     const projectBtn = document.querySelector('#project-button')
     const projectsBtn = document.querySelector('#projects-button')
 
+    newBtn.addEventListener("click", (e) => {
+        loadNew()
+    })
     projectsBtn.addEventListener("click", (e) => {
         loadProjects()
     })
@@ -334,6 +385,14 @@ function addTodosListeners(element) {
             loadTodo(todo.getAttribute('data-id'))
         })
     }
+}
+
+function loadNew() {
+    const element = document.querySelector('#main')
+    removeListeners(element)
+    removeMain()
+    const mainC = (0,_todoPage__WEBPACK_IMPORTED_MODULE_1__.displayNew)()
+    content.appendChild(mainC)
 }
 
 function loadProjects() {

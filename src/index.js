@@ -24,9 +24,13 @@ function removeMain(){
 }
 
 function addSidebarListeners() {
+    const newBtn = document.querySelector('#new-button')
     const projectBtn = document.querySelector('#project-button')
     const projectsBtn = document.querySelector('#projects-button')
 
+    newBtn.addEventListener("click", (e) => {
+        loadNew()
+    })
     projectsBtn.addEventListener("click", (e) => {
         loadProjects()
     })
@@ -53,6 +57,14 @@ function addTodosListeners(element) {
             loadTodo(todo.getAttribute('data-id'))
         })
     }
+}
+
+function loadNew() {
+    const element = document.querySelector('#main')
+    removeListeners(element)
+    removeMain()
+    const mainC = displayNew()
+    content.appendChild(mainC)
 }
 
 function loadProjects() {
