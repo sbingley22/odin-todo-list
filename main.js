@@ -128,6 +128,7 @@ const displayTodos = (todoIds, todos) => {
         if (todo.id in todoIds) {
             const div = document.createElement("div")
             div.className = 'todo-card'
+            div.setAttribute("data-id", todo.id)
             const title = document.createElement("h1")
             title.textContent = todo.title
             const date = document.createElement("h5")
@@ -267,6 +268,7 @@ function removeListeners(element) {
 
 function removeMain(){
     const main = document.querySelector('#main')
+    if (!main) return
     while (main.firstChild) {
         main.removeChild(main.firstChild)
     }
@@ -279,6 +281,16 @@ function addProjectListeners(element) {
         const project = children[i]
         project.addEventListener("click", (e) => {
             loadTodos(project.querySelector('h1').textContent)
+        })
+    }
+}
+
+function addTodosListeners(element) {
+    const children = element.children
+    for (let i = 0; i < children.length; i++) {
+        const todo = children[i]
+        todo.addEventListener("click", (e) => {
+            loadTodo(todo.getAttribute('data-id'))
         })
     }
 }
@@ -301,7 +313,12 @@ function loadTodos(title) {
         removeMain()
         const mainC = (0,_todoPage__WEBPACK_IMPORTED_MODULE_1__.displayTodos)(projects[0].todoIds, todos)
         content.appendChild(mainC)
+        addTodosListeners(mainC)
     }
+}
+
+function loadTodo(id) {
+    alert(id)
 }
 
 const content = document.querySelector('#content')
