@@ -1,5 +1,5 @@
 import { Todo } from "./todoData"
-import { sideBar, displayProjects } from "./todoPage"
+import { sideBar, displayProjects, displayTodos } from "./todoPage"
 import { project } from "./projects"
 
 const content = document.querySelector('#content')
@@ -23,5 +23,6 @@ projects[3].addTodo(0)
 const topbar = sideBar()
 content.appendChild(topbar)
 
-const mainContent = displayProjects(projects)
+//const mainContent = displayProjects(projects)
+const mainContent = displayTodos(projects[0].todoIds, todos)
 content.appendChild(mainContent)

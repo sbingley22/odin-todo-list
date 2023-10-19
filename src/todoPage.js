@@ -1,3 +1,5 @@
+import { project } from "./projects"
+
 const sideBar = () => {
     const sidebar = document.createElement("div")
     sidebar.id = 'sidebar'
@@ -38,4 +40,66 @@ const displayProjects = (projects) => {
     return projectDiv
 }
 
-export { sideBar, displayProjects }
+const displayTodos = (todoIds, todos) => {
+    const todoDiv = document.createElement('div')
+    todoDiv.id = 'main'
+    todoDiv.className = 'todos-container'
+
+    for (let i = 0; i < todos.length; i++) {
+        const todo = todos[i];
+        
+        if (todo.id in todoIds) {
+            const div = document.createElement("div")
+            div.className = 'todo-card'
+            const title = document.createElement("h1")
+            title.textContent = todo.title
+            const date = document.createElement("h5")
+            date.textContent = "Date due: " + todo.dueDate
+            
+            if (todo.priority == "high") div.style.borderColor = "red"
+            else if (todo.priority == "mid") div.style.borderColor = "yellow"
+            else div.style.borderColor = "green"
+    
+            div.appendChild(title)
+            div.appendChild(date)
+            todoDiv.appendChild(div)
+        }
+    }
+
+    return todoDiv
+}
+
+const displayTodo = (todoId, todos) => {
+    const todoDiv = document.createElement('div')
+    todoDiv.id = 'main'
+    todoDiv.className = 'todo-container'
+
+    for (let i = 0; i < todos.length; i++) {
+        const todo = todos[i];
+        
+        if (todo.id in todoId) {
+            const div = document.createElement("div")
+            div.className = 'todo-card'
+            const title = document.createElement("h1")
+            title.textContent = todo.title
+            const date = document.createElement("h5")
+            date.textContent = "Date due: " + todo.date
+            const priority = document.createElement("h6")
+            priority.textContent = "Priority: " + todo.priority
+            const p = document.createElement("p")
+            p.textContent = todo.description
+    
+            div.appendChild(title)
+            div.appendChild(date)
+            div.appendChild(priority)
+            div.appendChild(p)
+            todoDiv.appendChild(div)
+
+            break
+        }
+    }
+
+    return todoDiv
+}
+
+export { sideBar, displayProjects, displayTodos, displayTodo }
