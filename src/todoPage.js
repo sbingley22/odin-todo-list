@@ -141,18 +141,26 @@ const displayNew = () => {
 
     const divR = document.createElement("div")
     form.appendChild(divR)
+    divR.style.marginTop = 0
+    divR.style.paddingTop = 0
 
     const options = ["low", "mid", "high"]
     options.forEach((option,index) => {
         // Create a radio button element
         const radioButton = document.createElement("input");
         radioButton.type = "radio";
-        radioButton.name = "fruit"; // Use the same name for all radio buttons to create a group
+        radioButton.name = "priority"; // Use the same name for all radio buttons to create a group
         radioButton.value = option;
+        radioButton.style.marginLeft = 0
+        radioButton.style.marginTop = 0
+        //radioButton.style.paddingLeft = 0
     
         // Create a label element for the radio button
         const label = document.createElement("label");
         label.textContent = option;
+        label.style.marginRight = 0
+        label.style.marginTop = 0
+        //label.style.paddingRight = 0
 
         // Append the radio button and label to the container
         divR.appendChild(label);
@@ -162,7 +170,7 @@ const displayNew = () => {
     const textLabel = document.createElement("label");
     textLabel.innerText = "Description:";
     const textarea = document.createElement("textarea");
-    textarea.name = "Description";
+    textarea.name = "description";
     textarea.rows = 4; // Set the number of rows (optional)
     textarea.cols = 50;
     form.appendChild(textLabel)
@@ -171,6 +179,7 @@ const displayNew = () => {
     const submitButton = document.createElement("input");
     submitButton.type = "submit";
     submitButton.value = "Add Todo";
+    submitButton.id = "submit-btn"
 
     form.appendChild(submitButton)
     div.appendChild(form)

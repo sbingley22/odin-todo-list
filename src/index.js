@@ -23,6 +23,23 @@ function removeMain(){
     main.remove()
 }
 
+function addNewListeners() {
+    const form = document.querySelector('#my-form')
+    const submitBtn = document.querySelector('#submit-btn')
+    if (form && submitBtn){
+        submitBtn.addEventListener("click", (e) => {
+            e.preventDefault()
+
+            const title = form.elements.title.value;
+            const date = form.elements.date.value;
+            const priority = form.elements.priority.value;
+            const description = form.elements.description.value;
+
+            alert(title+date+priority+description)
+        })
+    }
+}
+
 function addSidebarListeners() {
     const newBtn = document.querySelector('#new-button')
     const projectBtn = document.querySelector('#project-button')
@@ -65,6 +82,7 @@ function loadNew() {
     removeMain()
     const mainC = displayNew()
     content.appendChild(mainC)
+    addNewListeners()
 }
 
 function loadProjects() {
