@@ -35,7 +35,7 @@
 }
 
 .projects-card {
-    flex: auto;
+    flex: 0 1 auto;
     flex-basis: 300px;
     display: grid;
     grid-template-columns: 300px;
@@ -88,4 +88,8 @@
 #my-form  * {
     padding: 10px;
     margin: 10px;
+}
+
+#my-form label {
+    font-size: 1.5rem;
 }
