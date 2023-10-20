@@ -6367,6 +6367,8 @@ function removeTodo(id) {
     for (let i = 0; i < projects.length; i++) {
         projects[i].removeTodo(id)
     }
+
+    saveData()
 }
 
 function addNewListeners(id = null) {
@@ -6388,6 +6390,8 @@ function addNewListeners(id = null) {
             todos.push(new _todoData__WEBPACK_IMPORTED_MODULE_0__.Todo(project+title, title, description, date, priority))
             projectAddTodo(project, project+title)
             loadTodos(projectBtn.textContent)
+
+            saveData()
         })
     }
 }
@@ -6437,6 +6441,8 @@ function addTodoListeners(element) {
         removeTodo(id)
         const projectBtn = document.querySelector('#project-button')
         loadTodos(projectBtn.textContent)
+
+        saveData()
     })
 }
 
@@ -6505,15 +6511,59 @@ function projectAddTodo(name, todoId){
     }
 }
 
+function loadData(){
+    let projects = []
+    let todos = []
+
+    let parsedProjects = JSON.parse(localStorage.getItem("projectData"))
+    let parsedTodos = JSON.parse(localStorage.getItem("todoData"))
+
+    if (parsedProjects == null){
+        //Add defaults
+        todos = []
+        projects = []
+        todos.push(new _todoData__WEBPACK_IMPORTED_MODULE_0__.Todo("DefaultAdd New Todo", "Add New Todo", "Edit this todo or add a new todo using the new button in the header", "tomorrow", "low"))
+        projects.push(new _projects__WEBPACK_IMPORTED_MODULE_2__.project("Default", ["DefaultAdd New Todo"]))
+    }
+    else {
+        projects = parsedProjects.map(obj => {
+            return new _projects__WEBPACK_IMPORTED_MODULE_2__.project(obj.name, obj.todoIds)
+        })
+        todos = parsedTodos.map(obj => { 
+            return new _todoData__WEBPACK_IMPORTED_MODULE_0__.Todo(obj.id, obj.title, obj.description, obj.dueDate, obj.priority)
+        })
+    }
+
+    return {projects, todos}
+}
+
+function saveData() {
+    const serializedTodo = todos.map(obj => {
+        return {
+            id: obj.id,
+            title: obj.title,
+            description: obj.description,
+            dueDate: obj.dueDate,
+            priority: obj.priority
+        }
+    })
+    const serializedProject = projects.map(obj => {
+        return {
+            name: obj.name,
+            todoIds: obj.todoIds,
+        }
+    })
+    const todoString = JSON.stringify(serializedTodo)
+    const projectString = JSON.stringify(serializedProject)
+
+    localStorage.setItem("projectData", projectString)
+    localStorage.setItem("todoData", todoString)
+}
+
 const content = document.querySelector('#content')
 
-const todos = []
-const projects = []
-
-todos.push(new _todoData__WEBPACK_IMPORTED_MODULE_0__.Todo("DefaultAdd New Todo", "Add New Todo", "Edit this todo or add a new todo using the new button in the header", "tomorrow", "low"))
-projects.push(new _projects__WEBPACK_IMPORTED_MODULE_2__.project("Default", []))
-projectAddTodo("Default", "DefaultAdd New Todo")
-
+//localStorage.clear()
+const { todos, projects } = loadData()
 
 const topbar = (0,_todoPage__WEBPACK_IMPORTED_MODULE_1__.sideBar)(projects[0].name)
 content.appendChild(topbar)
