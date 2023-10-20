@@ -133,7 +133,7 @@ const displayTodos = (todoIds, todos) => {
     for (let i = 0; i < todos.length; i++) {
         const todo = todos[i];
         
-        if (todo.id in todoIds) {
+        if (todoIds.includes(todo.id)) {
             const div = document.createElement("div")
             div.className = 'todo-card'
             div.setAttribute("data-id", todo.id)
@@ -195,6 +195,15 @@ const displayNew = () => {
     const form = document.createElement("form");
     form.id = "my-form";
 
+    const projectLabel = document.createElement("label");
+    projectLabel.innerText = "Project:";
+    const projectInput = document.createElement("input");
+    projectInput.type = "text";
+    projectInput.name = "project";
+
+    form.appendChild(projectLabel)
+    form.appendChild(projectInput)
+
     const nameLabel = document.createElement("label");
     nameLabel.innerText = "Title:";
     const nameInput = document.createElement("input");
@@ -218,8 +227,8 @@ const displayNew = () => {
 
     const divR = document.createElement("div")
     form.appendChild(divR)
-    divR.style.marginTop = 0
-    divR.style.paddingTop = 0
+    //divR.style.marginTop = 0
+    //divR.style.paddingTop = 0
 
     const options = ["low", "mid", "high"]
     options.forEach((option,index) => {
@@ -229,14 +238,14 @@ const displayNew = () => {
         radioButton.name = "priority"; // Use the same name for all radio buttons to create a group
         radioButton.value = option;
         radioButton.style.marginLeft = 0
-        radioButton.style.marginTop = 0
+        //radioButton.style.marginTop = 0
         //radioButton.style.paddingLeft = 0
     
         // Create a label element for the radio button
         const label = document.createElement("label");
         label.textContent = option;
         label.style.marginRight = 0
-        label.style.marginTop = 0
+        //label.style.marginTop = 0
         //label.style.paddingRight = 0
 
         // Append the radio button and label to the container
@@ -360,19 +369,21 @@ function removeMain(){
     main.remove()
 }
 
-function addNewListeners() {
+function addNewListeners(id = null) {
     const form = document.querySelector('#my-form')
     const submitBtn = document.querySelector('#submit-btn')
     if (form && submitBtn){
         submitBtn.addEventListener("click", (e) => {
             e.preventDefault()
 
+            const project = form.elements.project.value;
             const title = form.elements.title.value;
             const date = form.elements.date.value;
             const priority = form.elements.priority.value;
             const description = form.elements.description.value;
 
-            alert(title+date+priority+description)
+            todos.push(new _todoData__WEBPACK_IMPORTED_MODULE_0__.Todo(project+title, title, description, date, priority))
+            projectAddTodo(project, project+title)
         })
     }
 }
@@ -413,13 +424,13 @@ function addTodosListeners(element) {
     }
 }
 
-function loadNew() {
+function loadNew(id = null) {
     const element = document.querySelector('#main')
     removeListeners(element)
     removeMain()
     const mainC = (0,_todoPage__WEBPACK_IMPORTED_MODULE_1__.displayNew)()
     content.appendChild(mainC)
-    addNewListeners()
+    addNewListeners(id)
 }
 
 function loadProjects() {
@@ -466,22 +477,24 @@ function loadTodo(id) {
     }
 }
 
+function projectAddTodo(name, todoId){
+    const index = projects.findIndex(p => p.name == name)
+    if (index !== -1) {
+        projects[index].addTodo(todoId)
+    }
+    else {
+        projects.push(new _projects__WEBPACK_IMPORTED_MODULE_2__.project(name, [todoId]))
+    }
+}
+
 const content = document.querySelector('#content')
 
 const todos = []
 const projects = []
 
-todos.push(new _todoData__WEBPACK_IMPORTED_MODULE_0__.Todo(0, "Workout", "Squats", "tomorrow", "high"))
-todos.push(new _todoData__WEBPACK_IMPORTED_MODULE_0__.Todo(1, "Flex", "Abs", "now", "low"))
+todos.push(new _todoData__WEBPACK_IMPORTED_MODULE_0__.Todo("Default", "Add New Todo", "Edit this todo or add a new todo using the new button in the header", "tomorrow", "low"))
 projects.push(new _projects__WEBPACK_IMPORTED_MODULE_2__.project("Default", []))
-projects[0].addTodo(0)
-projects[0].addTodo(1)
-projects.push(new _projects__WEBPACK_IMPORTED_MODULE_2__.project("Extra", []))
-projects[1].addTodo(0)
-projects.push(new _projects__WEBPACK_IMPORTED_MODULE_2__.project("Extra", []))
-projects[2].addTodo(0)
-projects.push(new _projects__WEBPACK_IMPORTED_MODULE_2__.project("Extra", []))
-projects[3].addTodo(0)
+projectAddTodo("Default", "Default")
 
 
 const topbar = (0,_todoPage__WEBPACK_IMPORTED_MODULE_1__.sideBar)(projects[0].name)

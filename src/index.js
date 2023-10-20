@@ -23,19 +23,21 @@ function removeMain(){
     main.remove()
 }
 
-function addNewListeners() {
+function addNewListeners(id = null) {
     const form = document.querySelector('#my-form')
     const submitBtn = document.querySelector('#submit-btn')
     if (form && submitBtn){
         submitBtn.addEventListener("click", (e) => {
             e.preventDefault()
 
+            const project = form.elements.project.value;
             const title = form.elements.title.value;
             const date = form.elements.date.value;
             const priority = form.elements.priority.value;
             const description = form.elements.description.value;
 
-            alert(title+date+priority+description)
+            todos.push(new Todo(project+title, title, description, date, priority))
+            projectAddTodo(project, project+title)
         })
     }
 }
@@ -76,13 +78,13 @@ function addTodosListeners(element) {
     }
 }
 
-function loadNew() {
+function loadNew(id = null) {
     const element = document.querySelector('#main')
     removeListeners(element)
     removeMain()
     const mainC = displayNew()
     content.appendChild(mainC)
-    addNewListeners()
+    addNewListeners(id)
 }
 
 function loadProjects() {
@@ -129,22 +131,24 @@ function loadTodo(id) {
     }
 }
 
+function projectAddTodo(name, todoId){
+    const index = projects.findIndex(p => p.name == name)
+    if (index !== -1) {
+        projects[index].addTodo(todoId)
+    }
+    else {
+        projects.push(new project(name, [todoId]))
+    }
+}
+
 const content = document.querySelector('#content')
 
 const todos = []
 const projects = []
 
-todos.push(new Todo(0, "Workout", "Squats", "tomorrow", "high"))
-todos.push(new Todo(1, "Flex", "Abs", "now", "low"))
+todos.push(new Todo("Default", "Add New Todo", "Edit this todo or add a new todo using the new button in the header", "tomorrow", "low"))
 projects.push(new project("Default", []))
-projects[0].addTodo(0)
-projects[0].addTodo(1)
-projects.push(new project("Extra", []))
-projects[1].addTodo(0)
-projects.push(new project("Extra", []))
-projects[2].addTodo(0)
-projects.push(new project("Extra", []))
-projects[3].addTodo(0)
+projectAddTodo("Default", "Default")
 
 
 const topbar = sideBar(projects[0].name)

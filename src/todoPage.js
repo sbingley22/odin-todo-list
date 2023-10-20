@@ -56,7 +56,7 @@ const displayTodos = (todoIds, todos) => {
     for (let i = 0; i < todos.length; i++) {
         const todo = todos[i];
         
-        if (todo.id in todoIds) {
+        if (todoIds.includes(todo.id)) {
             const div = document.createElement("div")
             div.className = 'todo-card'
             div.setAttribute("data-id", todo.id)
@@ -118,6 +118,15 @@ const displayNew = () => {
     const form = document.createElement("form");
     form.id = "my-form";
 
+    const projectLabel = document.createElement("label");
+    projectLabel.innerText = "Project:";
+    const projectInput = document.createElement("input");
+    projectInput.type = "text";
+    projectInput.name = "project";
+
+    form.appendChild(projectLabel)
+    form.appendChild(projectInput)
+
     const nameLabel = document.createElement("label");
     nameLabel.innerText = "Title:";
     const nameInput = document.createElement("input");
@@ -141,8 +150,8 @@ const displayNew = () => {
 
     const divR = document.createElement("div")
     form.appendChild(divR)
-    divR.style.marginTop = 0
-    divR.style.paddingTop = 0
+    //divR.style.marginTop = 0
+    //divR.style.paddingTop = 0
 
     const options = ["low", "mid", "high"]
     options.forEach((option,index) => {
@@ -152,14 +161,14 @@ const displayNew = () => {
         radioButton.name = "priority"; // Use the same name for all radio buttons to create a group
         radioButton.value = option;
         radioButton.style.marginLeft = 0
-        radioButton.style.marginTop = 0
+        //radioButton.style.marginTop = 0
         //radioButton.style.paddingLeft = 0
     
         // Create a label element for the radio button
         const label = document.createElement("label");
         label.textContent = option;
         label.style.marginRight = 0
-        label.style.marginTop = 0
+        //label.style.marginTop = 0
         //label.style.paddingRight = 0
 
         // Append the radio button and label to the container
