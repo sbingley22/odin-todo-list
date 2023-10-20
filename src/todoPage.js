@@ -1,3 +1,5 @@
+import { parse, format, differenceInDays } from 'date-fns'
+
 const sideBar = (currentProject = "Default") => {
     const sidebar = document.createElement("div")
     sidebar.id = 'sidebar'
@@ -62,8 +64,16 @@ const displayTodos = (todoIds, todos) => {
             div.setAttribute("data-id", todo.id)
             const title = document.createElement("h1")
             title.textContent = todo.title
-            const date = document.createElement("h5")
-            date.textContent = "Date due: " + todo.dueDate
+
+            const date = document.createElement("h5")      
+            // Parse the input date string into a Date object using date-fns parse function
+            const selectedDate = parse(todo.dueDate, 'yyyy-MM-dd', new Date());
+            // Get the current date
+            const currentDate = new Date();      
+            // Calculate the difference in days between the two dates
+            const daysUntilDate = differenceInDays(selectedDate, currentDate);      
+            // Display the result
+            date.textContent = `Days to complete: ${daysUntilDate}`
             
             if (todo.priority == "high") div.style.borderColor = "red"
             else if (todo.priority == "mid") div.style.borderColor = "yellow"
