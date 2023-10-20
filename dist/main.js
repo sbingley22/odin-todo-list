@@ -23,6 +23,15 @@ class project {
         this.todoIds.push(id);
     }
 
+    removeTodo(id) {
+        const index = this.todoIds.findIndex(obj => obj == id)
+    
+        if (index !== -1) {
+            this.todoIds.splice(index, 1)
+        }
+
+    }
+
     get name() {
         return this._name; // Return the value of the private variable
     }
@@ -159,6 +168,7 @@ const displayTodo = (todo) => {
     const todoDiv = document.createElement('div')
     todoDiv.id = 'main'
     todoDiv.className = 'todo-singular'
+    todoDiv.setAttribute("data-id", todo.id)
         
     const div = document.createElement("div")
     div.className = 'todo-card'
@@ -171,6 +181,10 @@ const displayTodo = (todo) => {
     const p = document.createElement("p")
     p.textContent = todo.description
 
+    const deleteBtn = document.createElement("button")
+    deleteBtn.textContent = "Delete"
+    deleteBtn.id = "delete-btn"
+
     if (todo.priority == "high") div.style.borderColor = "red"
     else if (todo.priority == "mid") div.style.borderColor = "yellow"
     else div.style.borderColor = "green"
@@ -180,11 +194,12 @@ const displayTodo = (todo) => {
     div.appendChild(priority)
     div.appendChild(p)
     todoDiv.appendChild(div)
+    todoDiv.appendChild(deleteBtn)
 
     return todoDiv
 }
 
-const displayNew = () => {
+const displayNew = (todo = null, prj) => {
     const todoDiv = document.createElement('div')
     todoDiv.id = 'main'
     todoDiv.className = 'new-form'
@@ -200,6 +215,7 @@ const displayNew = () => {
     const projectInput = document.createElement("input");
     projectInput.type = "text";
     projectInput.name = "project";
+    projectInput.value = prj
 
     form.appendChild(projectLabel)
     form.appendChild(projectInput)
@@ -270,6 +286,12 @@ const displayNew = () => {
     form.appendChild(submitButton)
     div.appendChild(form)
     todoDiv.appendChild(div)
+
+    if (todo != null) {
+        nameInput.value = todo.title
+        textarea.value = todo.description
+        dateInput.value = todo.date
+    }
 
     return todoDiv
 }
@@ -369,12 +391,27 @@ function removeMain(){
     main.remove()
 }
 
+function removeTodo(id) {
+    const index = todos.findIndex(obj => obj.id == id)
+
+    if (index !== -1) {
+        todos.splice(index, 1)
+    }
+
+    for (let i = 0; i < projects.length; i++) {
+        projects[i].removeTodo(id)
+    }
+}
+
 function addNewListeners(id = null) {
     const form = document.querySelector('#my-form')
     const submitBtn = document.querySelector('#submit-btn')
     if (form && submitBtn){
         submitBtn.addEventListener("click", (e) => {
             e.preventDefault()
+
+            if (id != null) removeTodo(id)
+            const projectBtn = document.querySelector('#project-button')
 
             const project = form.elements.project.value;
             const title = form.elements.title.value;
@@ -384,6 +421,7 @@ function addNewListeners(id = null) {
 
             todos.push(new _todoData__WEBPACK_IMPORTED_MODULE_0__.Todo(project+title, title, description, date, priority))
             projectAddTodo(project, project+title)
+            loadTodos(projectBtn.textContent)
         })
     }
 }
@@ -424,11 +462,25 @@ function addTodosListeners(element) {
     }
 }
 
+function addTodoListeners(element) {    
+    element.firstChild.addEventListener("click", (e) => {
+        loadNew(element.getAttribute('data-id'))
+    })
+    element.lastChild.addEventListener("click", (e) => {
+        const id = element.getAttribute('data-id')
+        removeTodo(id)
+        const projectBtn = document.querySelector('#project-button')
+        loadTodos(projectBtn.textContent)
+    })
+}
+
 function loadNew(id = null) {
     const element = document.querySelector('#main')
     removeListeners(element)
     removeMain()
-    const mainC = (0,_todoPage__WEBPACK_IMPORTED_MODULE_1__.displayNew)()
+    const prj = document.querySelector('#project-button').textContent
+    const todo = todos.find(t => t.id == id)
+    const mainC = (0,_todoPage__WEBPACK_IMPORTED_MODULE_1__.displayNew)(todo, prj)
     content.appendChild(mainC)
     addNewListeners(id)
 }
@@ -470,7 +522,7 @@ function loadTodo(id) {
         removeMain()
         const mainC = (0,_todoPage__WEBPACK_IMPORTED_MODULE_1__.displayTodo)(todo)
         content.appendChild(mainC)
-        //addTodosListeners(mainC)
+        addTodoListeners(mainC)
     }
     else {
         alert("cant match todo id")
@@ -492,9 +544,9 @@ const content = document.querySelector('#content')
 const todos = []
 const projects = []
 
-todos.push(new _todoData__WEBPACK_IMPORTED_MODULE_0__.Todo("Default", "Add New Todo", "Edit this todo or add a new todo using the new button in the header", "tomorrow", "low"))
+todos.push(new _todoData__WEBPACK_IMPORTED_MODULE_0__.Todo("DefaultAdd New Todo", "Add New Todo", "Edit this todo or add a new todo using the new button in the header", "tomorrow", "low"))
 projects.push(new _projects__WEBPACK_IMPORTED_MODULE_2__.project("Default", []))
-projectAddTodo("Default", "Default")
+projectAddTodo("Default", "DefaultAdd New Todo")
 
 
 const topbar = (0,_todoPage__WEBPACK_IMPORTED_MODULE_1__.sideBar)(projects[0].name)

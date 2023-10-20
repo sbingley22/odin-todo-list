@@ -23,12 +23,27 @@ function removeMain(){
     main.remove()
 }
 
+function removeTodo(id) {
+    const index = todos.findIndex(obj => obj.id == id)
+
+    if (index !== -1) {
+        todos.splice(index, 1)
+    }
+
+    for (let i = 0; i < projects.length; i++) {
+        projects[i].removeTodo(id)
+    }
+}
+
 function addNewListeners(id = null) {
     const form = document.querySelector('#my-form')
     const submitBtn = document.querySelector('#submit-btn')
     if (form && submitBtn){
         submitBtn.addEventListener("click", (e) => {
             e.preventDefault()
+
+            if (id != null) removeTodo(id)
+            const projectBtn = document.querySelector('#project-button')
 
             const project = form.elements.project.value;
             const title = form.elements.title.value;
@@ -38,6 +53,7 @@ function addNewListeners(id = null) {
 
             todos.push(new Todo(project+title, title, description, date, priority))
             projectAddTodo(project, project+title)
+            loadTodos(projectBtn.textContent)
         })
     }
 }
@@ -78,11 +94,25 @@ function addTodosListeners(element) {
     }
 }
 
+function addTodoListeners(element) {    
+    element.firstChild.addEventListener("click", (e) => {
+        loadNew(element.getAttribute('data-id'))
+    })
+    element.lastChild.addEventListener("click", (e) => {
+        const id = element.getAttribute('data-id')
+        removeTodo(id)
+        const projectBtn = document.querySelector('#project-button')
+        loadTodos(projectBtn.textContent)
+    })
+}
+
 function loadNew(id = null) {
     const element = document.querySelector('#main')
     removeListeners(element)
     removeMain()
-    const mainC = displayNew()
+    const prj = document.querySelector('#project-button').textContent
+    const todo = todos.find(t => t.id == id)
+    const mainC = displayNew(todo, prj)
     content.appendChild(mainC)
     addNewListeners(id)
 }
@@ -124,7 +154,7 @@ function loadTodo(id) {
         removeMain()
         const mainC = displayTodo(todo)
         content.appendChild(mainC)
-        //addTodosListeners(mainC)
+        addTodoListeners(mainC)
     }
     else {
         alert("cant match todo id")
@@ -146,9 +176,9 @@ const content = document.querySelector('#content')
 const todos = []
 const projects = []
 
-todos.push(new Todo("Default", "Add New Todo", "Edit this todo or add a new todo using the new button in the header", "tomorrow", "low"))
+todos.push(new Todo("DefaultAdd New Todo", "Add New Todo", "Edit this todo or add a new todo using the new button in the header", "tomorrow", "low"))
 projects.push(new project("Default", []))
-projectAddTodo("Default", "Default")
+projectAddTodo("Default", "DefaultAdd New Todo")
 
 
 const topbar = sideBar(projects[0].name)

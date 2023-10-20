@@ -76,6 +76,11 @@
     margin: 20px;
 }
 
+.todo-singular * {
+    font-size: 1.5rem;
+    padding: 0 20px;
+}
+
 #my-form {
     display: grid;
     grid-template-columns: 1fr;
@@ -96,4 +101,11 @@
     font-size: 1.5rem;
     margin-bottom: 0;
     padding-bottom: 0;
+}
+
+#delete-btn {
+    margin: 20px;
+    padding: 20px;
+    font-size: 2rem;
+    background-color: rgb(26, 26, 26);
 }

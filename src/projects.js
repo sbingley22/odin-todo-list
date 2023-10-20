@@ -9,6 +9,15 @@ class project {
         this.todoIds.push(id);
     }
 
+    removeTodo(id) {
+        const index = this.todoIds.findIndex(obj => obj == id)
+    
+        if (index !== -1) {
+            this.todoIds.splice(index, 1)
+        }
+
+    }
+
     get name() {
         return this._name; // Return the value of the private variable
     }

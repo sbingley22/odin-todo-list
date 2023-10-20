@@ -82,6 +82,7 @@ const displayTodo = (todo) => {
     const todoDiv = document.createElement('div')
     todoDiv.id = 'main'
     todoDiv.className = 'todo-singular'
+    todoDiv.setAttribute("data-id", todo.id)
         
     const div = document.createElement("div")
     div.className = 'todo-card'
@@ -94,6 +95,10 @@ const displayTodo = (todo) => {
     const p = document.createElement("p")
     p.textContent = todo.description
 
+    const deleteBtn = document.createElement("button")
+    deleteBtn.textContent = "Delete"
+    deleteBtn.id = "delete-btn"
+
     if (todo.priority == "high") div.style.borderColor = "red"
     else if (todo.priority == "mid") div.style.borderColor = "yellow"
     else div.style.borderColor = "green"
@@ -103,11 +108,12 @@ const displayTodo = (todo) => {
     div.appendChild(priority)
     div.appendChild(p)
     todoDiv.appendChild(div)
+    todoDiv.appendChild(deleteBtn)
 
     return todoDiv
 }
 
-const displayNew = () => {
+const displayNew = (todo = null, prj) => {
     const todoDiv = document.createElement('div')
     todoDiv.id = 'main'
     todoDiv.className = 'new-form'
@@ -123,6 +129,7 @@ const displayNew = () => {
     const projectInput = document.createElement("input");
     projectInput.type = "text";
     projectInput.name = "project";
+    projectInput.value = prj
 
     form.appendChild(projectLabel)
     form.appendChild(projectInput)
@@ -193,6 +200,12 @@ const displayNew = () => {
     form.appendChild(submitButton)
     div.appendChild(form)
     todoDiv.appendChild(div)
+
+    if (todo != null) {
+        nameInput.value = todo.title
+        textarea.value = todo.description
+        dateInput.value = todo.date
+    }
 
     return todoDiv
 }
