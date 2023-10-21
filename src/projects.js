@@ -1,30 +1,29 @@
 class project {
-    constructor(name, todoIds) {
-        this._name = name;
-       
-        this.todoIds = todoIds;
-    }
+  constructor(name, todoIds) {
+    this._name = name;
 
-    addTodo(id) {
-        this.todoIds.push(id);
-    }
+    this.todoIds = todoIds;
+  }
 
-    removeTodo(id) {
-        const index = this.todoIds.findIndex(obj => obj == id)
-    
-        if (index !== -1) {
-            this.todoIds.splice(index, 1)
-        }
+  addTodo(id) {
+    this.todoIds.push(id);
+  }
 
-    }
+  removeTodo(id) {
+    const index = this.todoIds.findIndex((obj) => obj == id);
 
-    get name() {
-        return this._name; // Return the value of the private variable
+    if (index !== -1) {
+      this.todoIds.splice(index, 1);
     }
+  }
 
-    set name(name) {
-        this._name = name; // Set the private variable with the new value
-    }
+  get name() {
+    return this._name; // Return the value of the private variable
+  }
+
+  set name(name) {
+    this._name = name; // Set the private variable with the new value
+  }
 }
 
 export { project };
